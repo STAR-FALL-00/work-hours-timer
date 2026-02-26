@@ -1,0 +1,488 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:async';
+import '../../core/models/work_record.dart';
+import '../../providers/providers.dart';
+import 'settings_screen.dart';
+
+enum WorkStatus { idle, working, onBreak }
+
+class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  DateTime? _startTime;
+  DateTime? _breakStartTime;
+  Duration _totalBreakTime = Duration.zero;
+  Timer? _timer;
+  Duration _elapsed = Duration.zero;
+  WorkStatus _status = WorkStatus.idle;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startWork() {
+    setState(() {
+      _startTime = DateTime.now();
+      _breakStartTime = null;
+      _totalBreakTime = Duration.zero;
+      _elapsed = Duration.zero;
+      _status = WorkStatus.working;
+    });
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_startTime != null) {
+        setState(() {
+          final now = DateTime.now();
+          _elapsed = now.difference(_startTime!);
+
+          // 减去休息时间
+          if (_breakStartTime != null) {
+            _elapsed -= now.difference(_breakStartTime!);
+          }
+          _elapsed -= _totalBreakTime;
+        });
+      }
+    });
+  }
+
+  void _toggleBreak() {
+    setState(() {
+      if (_status == WorkStatus.working) {
+        // 开始休息
+        _breakStartTime = DateTime.now();
+        _status = WorkStatus.onBreak;
+      } else if (_status == WorkStatus.onBreak) {
+        // 结束休息
+        if (_breakStartTime != null) {
+          _totalBreakTime += DateTime.now().difference(_breakStartTime!);
+          _breakStartTime = null;
+        }
+        _status = WorkStatus.working;
+      }
+    });
+  }
+
+  void _endWork() async {
+    if (_startTime == null) return;
+
+    final endTime = DateTime.now();
+
+    // 如果当前在休息，先结束休息
+    if (_breakStartTime != null) {
+      _totalBreakTime += endTime.difference(_breakStartTime!);
+    }
+
+    // 计算实际工作时长（排除休息时间）
+    final totalDuration = endTime.difference(_startTime!);
+    final workDuration = totalDuration - _totalBreakTime;
+
+    final record = WorkRecord.fromDuration(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      startTime: _startTime!,
+      endTime: endTime,
+      date: DateTime.now(),
+      duration: workDuration,
+    );
+
+    final calculator = ref.read(calculatorServiceProvider);
+    await calculator.addWorkRecord(record);
+
+    setState(() {
+      _startTime = null;
+      _breakStartTime = null;
+      _totalBreakTime = Duration.zero;
+      _elapsed = Duration.zero;
+      _status = WorkStatus.idle;
+    });
+    _timer?.cancel();
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('工作记录已保存')),
+      );
+      ref.invalidate(dailyWorkHoursProvider);
+      ref.invalidate(todayRecordsProvider);
+    }
+  }
+
+  String _formatDuration(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+
+  String _formatTime(DateTime time) {
+    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  }
+
+  String _getStatusText() {
+    switch (_status) {
+      case WorkStatus.idle:
+        return '未开始工作';
+      case WorkStatus.working:
+        return '正在工作中...';
+      case WorkStatus.onBreak:
+        return '午休中...';
+    }
+  }
+
+  Color _getStatusColor() {
+    switch (_status) {
+      case WorkStatus.idle:
+        return Colors.grey;
+      case WorkStatus.working:
+        return Colors.green;
+      case WorkStatus.onBreak:
+        return Colors.orange;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final todayRecords = ref.watch(todayRecordsProvider);
+    final now = DateTime.now();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('工时计时器'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+            },
+            tooltip: '设置',
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 当前日期和时间
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        '${now.year}年${now.month}月${now.day}日',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _formatTime(now),
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'monospace',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // 状态和计时器显示
+              Card(
+                color: _getStatusColor().withOpacity(0.1),
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                              _status == WorkStatus.idle
+                                  ? Icons.access_time
+                                  : _status == WorkStatus.working
+                                      ? Icons.work
+                                      : Icons.free_breakfast,
+                              color: _getStatusColor(),
+                              size: 24),
+                          const SizedBox(width: 8),
+                          Text(
+                            _getStatusText(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: _getStatusColor(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        _formatDuration(_elapsed),
+                        style: const TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'monospace',
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // 控制按钮
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 12,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          if (_status == WorkStatus.idle)
+                            ElevatedButton.icon(
+                              onPressed: _startWork,
+                              icon: const Icon(Icons.play_arrow),
+                              label: const Text('开始工作'),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 16,
+                                ),
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                          if (_status != WorkStatus.idle) ...[
+                            ElevatedButton.icon(
+                              onPressed: _toggleBreak,
+                              icon: Icon(_status == WorkStatus.working
+                                  ? Icons.free_breakfast
+                                  : Icons.play_arrow),
+                              label: Text(_status == WorkStatus.working
+                                  ? '午休'
+                                  : '继续工作'),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 16,
+                                ),
+                                backgroundColor: _status == WorkStatus.working
+                                    ? Colors.orange
+                                    : Colors.green,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                            ElevatedButton.icon(
+                              onPressed: _endWork,
+                              icon: const Icon(Icons.stop),
+                              label: const Text('下班'),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 16,
+                                ),
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // 今日统计
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.bar_chart, size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            '今日统计',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      todayRecords.when(
+                        data: (records) {
+                          // 直接从记录计算统计
+                          final totalDuration = records.fold<Duration>(
+                            Duration.zero,
+                            (sum, record) => sum + record.duration,
+                          );
+                          const standardHours = Duration(hours: 8);
+                          final remaining = standardHours - totalDuration;
+                          final overtime = totalDuration > standardHours
+                              ? totalDuration - standardHours
+                              : Duration.zero;
+
+                          return Column(
+                            children: [
+                              _buildStatRow(
+                                '总工时',
+                                _formatDuration(totalDuration),
+                                Colors.blue,
+                              ),
+                              const Divider(height: 16),
+                              _buildStatRow(
+                                '剩余工时',
+                                _formatDuration(remaining.isNegative
+                                    ? Duration.zero
+                                    : remaining),
+                                Colors.orange,
+                              ),
+                              if (overtime > Duration.zero) ...[
+                                const Divider(height: 16),
+                                _buildStatRow(
+                                  '加班时长',
+                                  _formatDuration(overtime),
+                                  Colors.red,
+                                ),
+                              ],
+                            ],
+                          );
+                        },
+                        loading: () => const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        error: (error, stack) => Text('错误: $error'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // 今日记录
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.list, size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            '今日记录',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      todayRecords.when(
+                        data: (records) {
+                          if (records.isEmpty) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text(
+                                  '暂无记录',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return Column(
+                            children: records.map((record) {
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 8),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${_formatTime(record.startTime)} - ${_formatTime(record.endTime)}',
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                    Text(
+                                      _formatDuration(record.duration),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'monospace',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        },
+                        loading: () => const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        error: (error, stack) => Text('错误: $error'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatRow(String label, String value, Color color) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 16),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: color,
+            fontFamily: 'monospace',
+          ),
+        ),
+      ],
+    );
+  }
+}

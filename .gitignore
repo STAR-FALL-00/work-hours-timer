@@ -1,0 +1,50 @@
+# Flutter/Dart
+flutter_app/.dart_tool/
+flutter_app/.flutter-plugins
+flutter_app/.flutter-plugins-dependencies
+flutter_app/.packages
+flutter_app/build/
+flutter_app/pubspec.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+
+# Temporary files
+flutter_app/portable_package/
+flutter_app/debug-info/
+flutter_app/temp_reload.txt
+
+# Backup files
+backup_before_cleanup/
+
+# Windows
+$RECYCLE.BIN/
+
+# Build artifacts (keep installer output for releases)
+# flutter_app/installer_output/
+
+# Keep release files for distribution
+!flutter_app/installer_output/*.exe
+!flutter_app/*.zip
