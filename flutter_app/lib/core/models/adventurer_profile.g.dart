@@ -24,13 +24,16 @@ class AdventurerProfileAdapter extends TypeAdapter<AdventurerProfile> {
       totalGold: fields[4] as int,
       achievements: (fields[5] as List).cast<String>(),
       consecutiveWorkDays: fields[6] as int,
+      gold: fields[7] as int,
+      totalGoldEarned: fields[8] as int,
+      totalGoldSpent: fields[9] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, AdventurerProfile obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -44,7 +47,13 @@ class AdventurerProfileAdapter extends TypeAdapter<AdventurerProfile> {
       ..writeByte(5)
       ..write(obj.achievements)
       ..writeByte(6)
-      ..write(obj.consecutiveWorkDays);
+      ..write(obj.consecutiveWorkDays)
+      ..writeByte(7)
+      ..write(obj.gold)
+      ..writeByte(8)
+      ..write(obj.totalGoldEarned)
+      ..writeByte(9)
+      ..write(obj.totalGoldSpent);
   }
 
   @override

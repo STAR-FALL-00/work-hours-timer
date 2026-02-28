@@ -2,12 +2,13 @@
 
 <div align="center">
 
-![Flutter](https://img.shields.io/badge/Flutter-3.41.2-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-orange.svg)
+![Version](https://img.shields.io/badge/version-3.0.0--dev-orange.svg)
 
-一款简洁高效的工时记录工具，支持标准模式和游戏化模式，让工作记录变得有趣！
+一款简洁高效的工时记录工具，采用 Modern HUD 设计，支持标准模式和游戏化模式，让工作记录变得有趣！
+
+> 🚀 **v3.0 重大更新**：技术栈切换到 WPF/C#/.NET 8，性能提升 60%+，更好的 Windows 原生体验！
 
 [下载安装程序](https://github.com/YOUR_USERNAME/work-hours-timer/releases) | [使用文档](flutter_app/用户使用手册.md) | [报告问题](https://github.com/YOUR_USERNAME/work-hours-timer/issues)
 
@@ -15,7 +16,48 @@
 
 ---
 
+## 🎯 版本说明
+
+### v3.0 (WPF/.NET 8) - 开发中 🚀
+
+**技术栈**: WPF/C#/.NET 8  
+**状态**: 开发中（预计 2026-03-19 完成）  
+**特性**:
+- ✨ 性能提升 60%+（内存占用 38MB vs 105MB）
+- ✨ 更好的 Windows 11 原生特效（Mica/Acrylic）
+- ✨ 更流畅的窗口控制和鼠标穿透
+- ✨ 启动速度提升 43%（1.2s vs 2.1s）
+
+**文档**:
+- [技术栈迁移说明](V3.0_TECH_STACK_MIGRATION.md)
+- [Flutter vs WPF 对比](V3.0_FLUTTER_VS_WPF_COMPARISON.md)
+- [开发计划](V3.0_MIGRATION_ACTION_PLAN.md)
+- [WPF 快速开始](wpf_app/QUICK_START_GUIDE.md)
+
+### v2.x (Flutter) - 归档保留 📦
+
+**技术栈**: Flutter 3.41.2  
+**状态**: 归档保留，仅接受严重 Bug 修复  
+**特性**: 完整的游戏化工时记录功能
+
+**文档**:
+- [Flutter 版本归档说明](flutter_app/V3.0_FLUTTER_ARCHIVED.md)
+- [v1.2.0 更新日志](flutter_app/CHANGELOG_v1.2.0.md)
+- [功能说明](flutter_app/CURRENT_FEATURES.md)
+
+---
+
 ## ✨ 功能特性
+
+### 🎨 v1.2.0 新特性
+
+#### Modern HUD 设计系统
+- 🎨 **全新视觉风格** - 统一、卡片式、微反馈、高对比度
+- 🌈 **配色方案** - Deep Indigo + Amber + Coral Red + Emerald Green
+- ✨ **飘字动画** - 金币和经验值获得时的视觉反馈
+- 🎯 **连击奖励** - 60分钟不间断工作额外奖励
+- 📊 **优化图表** - 渐变折线图、柱状图、热力图
+- 🧩 **组件库** - 7个核心组件，统一设计语言
 
 ### 🎯 双模式设计
 
@@ -30,6 +72,8 @@
 - 🏆 成就系统（30+ 成就）
 - ⭐ 经验值和等级系统
 - 🎯 每日任务挑战
+- 🐉 项目BOSS系统
+- 🛒 商店和装备系统
 
 ### 📊 核心功能
 
@@ -49,7 +93,7 @@
 
 **适合：** 普通用户
 
-- 📦 [下载安装程序 (10.53 MB)](https://github.com/YOUR_USERNAME/work-hours-timer/releases/latest/download/WorkHoursTimer-Setup-v1.0.0.exe)
+- 📦 [下载安装程序 (10.53 MB)](https://github.com/YOUR_USERNAME/work-hours-timer/releases/latest/download/WorkHoursTimer-Setup-v1.2.0.exe)
 - 双击运行，按照向导完成安装
 - 自动创建开始菜单快捷方式
 
@@ -57,7 +101,7 @@
 
 **适合：** 技术用户、快速测试
 
-- 📦 [下载便携版 (11.84 MB)](https://github.com/YOUR_USERNAME/work-hours-timer/releases/latest/download/工时计时器-v1.0.0-便携版.zip)
+- 📦 [下载便携版 (11.84 MB)](https://github.com/YOUR_USERNAME/work-hours-timer/releases/latest/download/工时计时器-v1.2.0-便携版.zip)
 - 解压到任意目录
 - 双击 `work_hours_timer.exe` 启动
 
@@ -201,6 +245,8 @@ work-hours-timer/
 
 ## 📚 文档
 
+- [更新日志 v1.2.0](flutter_app/CHANGELOG_v1.2.0.md) - v1.2.0 更新内容
+- [UI 重构总结](flutter_app/UI_REDESIGN_V1.2.0_FINAL_SUMMARY.md) - v1.2.0 UI 重构完整总结
 - [用户使用手册](flutter_app/用户使用手册.md) - 详细的使用说明
 - [功能说明](flutter_app/CURRENT_FEATURES.md) - 完整功能列表
 - [游戏化指南](flutter_app/GAMIFICATION_COMPLETE_GUIDE.md) - 游戏化功能详解

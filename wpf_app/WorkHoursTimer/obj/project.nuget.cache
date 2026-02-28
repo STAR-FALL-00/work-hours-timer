@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "/IIw5t8mWGk=",
+  "success": true,
+  "projectFilePath": "E:\\work\\work\\New-warm\\timer\\wpf_app\\WorkHoursTimer\\WorkHoursTimer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Liu\\.nuget\\packages\\communitytoolkit.mvvm\\8.2.2\\communitytoolkit.mvvm.8.2.2.nupkg.sha512",
+    "C:\\Users\\Liu\\.nuget\\packages\\system.text.json\\8.0.5\\system.text.json.8.0.5.nupkg.sha512",
+    "C:\\Users\\Liu\\.nuget\\packages\\wpf-ui\\3.0.5\\wpf-ui.3.0.5.nupkg.sha512",
+    "C:\\Users\\Liu\\.nuget\\packages\\xamlanimatedgif\\2.2.0\\xamlanimatedgif.2.2.0.nupkg.sha512"
+  ],
+  "logs": []
+}

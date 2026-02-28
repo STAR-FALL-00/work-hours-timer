@@ -1,0 +1,87 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\work\\work\\New-warm\\timer\\wpf_app\\WorkHoursTimer\\WorkHoursTimer.csproj": {}
+  },
+  "projects": {
+    "E:\\work\\work\\New-warm\\timer\\wpf_app\\WorkHoursTimer\\WorkHoursTimer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\work\\work\\New-warm\\timer\\wpf_app\\WorkHoursTimer\\WorkHoursTimer.csproj",
+        "projectName": "WorkHoursTimer",
+        "projectPath": "E:\\work\\work\\New-warm\\timer\\wpf_app\\WorkHoursTimer\\WorkHoursTimer.csproj",
+        "packagesPath": "C:\\Users\\Liu\\.nuget\\packages\\",
+        "outputPath": "E:\\work\\work\\New-warm\\timer\\wpf_app\\WorkHoursTimer\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Liu\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "CommunityToolkit.Mvvm": {
+              "target": "Package",
+              "version": "[8.2.2, )"
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[8.0.5, )"
+            },
+            "WPF-UI": {
+              "target": "Package",
+              "version": "[3.0.5, )"
+            },
+            "XamlAnimatedGif": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.418/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

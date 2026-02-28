@@ -23,13 +23,16 @@ class WorkRecordAdapter extends TypeAdapter<WorkRecord> {
       date: fields[3] as DateTime,
       durationInMilliseconds: fields[4] as int,
       notes: fields[5] as String?,
+      projectId: fields[6] as String?,
+      goldEarned: fields[7] as int,
+      expEarned: fields[8] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, WorkRecord obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -41,7 +44,13 @@ class WorkRecordAdapter extends TypeAdapter<WorkRecord> {
       ..writeByte(4)
       ..write(obj.durationInMilliseconds)
       ..writeByte(5)
-      ..write(obj.notes);
+      ..write(obj.notes)
+      ..writeByte(6)
+      ..write(obj.projectId)
+      ..writeByte(7)
+      ..write(obj.goldEarned)
+      ..writeByte(8)
+      ..write(obj.expEarned);
   }
 
   @override

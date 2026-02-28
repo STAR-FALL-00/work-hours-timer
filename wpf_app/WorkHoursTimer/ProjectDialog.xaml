@@ -1,0 +1,81 @@
+<Window x:Class="WorkHoursTimer.ProjectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="项目管理"
+        Width="400"
+        Height="350"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        Topmost="True">
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- 项目名称 -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock Text="项目名称"
+                       FontSize="14"
+                       Foreground="{StaticResource TextSecondary}"
+                       Margin="0,0,0,8"/>
+            <TextBox x:Name="NameTextBox"
+                     FontSize="14"
+                     Padding="8"/>
+        </StackPanel>
+        
+        <!-- 项目颜色 -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,16">
+            <TextBlock Text="项目颜色"
+                       FontSize="14"
+                       Foreground="{StaticResource TextSecondary}"
+                       Margin="0,0,0,8"/>
+            <ComboBox x:Name="ColorComboBox"
+                      FontSize="14"
+                      SelectedIndex="0">
+                <ComboBoxItem Content="🟡 金色" Tag="#FFD700"/>
+                <ComboBoxItem Content="🔵 蓝色" Tag="#4A90E2"/>
+                <ComboBoxItem Content="🟢 绿色" Tag="#2ECC71"/>
+                <ComboBoxItem Content="🔴 红色" Tag="#FF4757"/>
+                <ComboBoxItem Content="🟣 紫色" Tag="#9B59B6"/>
+                <ComboBoxItem Content="🟠 橙色" Tag="#FF8C42"/>
+            </ComboBox>
+        </StackPanel>
+        
+        <!-- 项目描述 -->
+        <StackPanel Grid.Row="2" Margin="0,0,0,16">
+            <TextBlock Text="项目描述（可选）"
+                       FontSize="14"
+                       Foreground="{StaticResource TextSecondary}"
+                       Margin="0,0,0,8"/>
+            <TextBox x:Name="DescriptionTextBox"
+                     FontSize="14"
+                     Padding="8"
+                     Height="80"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     VerticalScrollBarVisibility="Auto"/>
+        </StackPanel>
+        
+        <!-- 按钮 -->
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <ui:Button Content="取消"
+                       Width="100"
+                       Margin="0,0,8,0"
+                       Appearance="Secondary"
+                       Click="Cancel_Click"/>
+            <ui:Button Content="确定"
+                       Width="100"
+                       Appearance="Primary"
+                       Click="OK_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,8 @@
+E:\work\work\New-warm\timer\wpf_app\WorkHoursTimer\bin\Release\net8.0-windows\win-x64\publish\WorkHoursTimer.exe
+E:\work\work\New-warm\timer\wpf_app\WorkHoursTimer\bin\Release\net8.0-windows\win-x64\publish\WorkHoursTimer.dll
+E:\work\work\New-warm\timer\wpf_app\WorkHoursTimer\bin\Release\net8.0-windows\win-x64\publish\WorkHoursTimer.deps.json
+E:\work\work\New-warm\timer\wpf_app\WorkHoursTimer\bin\Release\net8.0-windows\win-x64\publish\WorkHoursTimer.runtimeconfig.json
+E:\work\work\New-warm\timer\wpf_app\WorkHoursTimer\bin\Release\net8.0-windows\win-x64\publish\WorkHoursTimer.pdb
+E:\work\work\New-warm\timer\wpf_app\WorkHoursTimer\bin\Release\net8.0-windows\win-x64\publish\CommunityToolkit.Mvvm.dll
+E:\work\work\New-warm\timer\wpf_app\WorkHoursTimer\bin\Release\net8.0-windows\win-x64\publish\Wpf.Ui.dll
+E:\work\work\New-warm\timer\wpf_app\WorkHoursTimer\bin\Release\net8.0-windows\win-x64\publish\XamlAnimatedGif.dll

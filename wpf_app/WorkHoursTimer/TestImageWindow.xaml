@@ -1,0 +1,26 @@
+<Window x:Class="WorkHoursTimer.TestImageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="测试图片加载" Height="300" Width="400">
+    <StackPanel Margin="20">
+        <TextBlock Text="测试图片加载" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+        
+        <!-- 测试 1: 使用 pack:// URI -->
+        <TextBlock Text="测试 1: pack:// URI" Margin="0,10,0,5"/>
+        <Image Width="64" Height="64" 
+               RenderOptions.BitmapScalingMode="NearestNeighbor"
+               Source="pack://application:,,,/Assets/Images/Hero/Hero Knight/Sprites/HeroKnight/Idle/HeroKnight_Idle_0.png"/>
+        
+        <!-- 测试 2: 使用相对路径 -->
+        <TextBlock Text="测试 2: 相对路径" Margin="0,10,0,5"/>
+        <Image Width="64" Height="64"
+               RenderOptions.BitmapScalingMode="NearestNeighbor"
+               Source="/Assets/Images/Hero/Hero Knight/Sprites/HeroKnight/Idle/HeroKnight_Idle_0.png"/>
+        
+        <!-- 测试 3: 使用简化路径 -->
+        <TextBlock Text="测试 3: 简化路径" Margin="0,10,0,5"/>
+        <Image Width="64" Height="64"
+               RenderOptions.BitmapScalingMode="NearestNeighbor"
+               Source="Assets/Images/Hero/Hero Knight/Sprites/HeroKnight/Idle/HeroKnight_Idle_0.png"/>
+    </StackPanel>
+</Window>

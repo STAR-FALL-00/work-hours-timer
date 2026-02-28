@@ -25,6 +25,15 @@ class AdventurerProfile extends HiveObject {
   @HiveField(6)
   final int consecutiveWorkDays; // 连续工作天数
 
+  @HiveField(7)
+  final int gold; // 当前金币
+
+  @HiveField(8)
+  final int totalGoldEarned; // 累计获得金币
+
+  @HiveField(9)
+  final int totalGoldSpent; // 累计消费金币
+
   AdventurerProfile({
     this.name = '新手冒险者',
     this.level = 1,
@@ -33,6 +42,9 @@ class AdventurerProfile extends HiveObject {
     this.totalGold = 0,
     this.achievements = const [],
     this.consecutiveWorkDays = 0,
+    this.gold = 0,
+    this.totalGoldEarned = 0,
+    this.totalGoldSpent = 0,
   });
 
   // 获取当前等级称号
@@ -71,7 +83,7 @@ class AdventurerProfile extends HiveObject {
   AdventurerProfile addWorkExperience(int hours) {
     final newExp = experience + (hours * 10);
     final expNeeded = experienceToNextLevel;
-    
+
     if (newExp >= expNeeded) {
       // 升级！
       return copyWith(
@@ -92,6 +104,29 @@ class AdventurerProfile extends HiveObject {
     return copyWith(totalGold: totalGold + gold);
   }
 
+  // v1.1.0 新增：添加金币（新版本）
+  AdventurerProfile earnGold(int amount) {
+    return copyWith(
+      gold: gold + amount,
+      totalGoldEarned: totalGoldEarned + amount,
+      totalGold: totalGold + amount, // 保持兼容性
+    );
+  }
+
+  // v1.1.0 新增：消费金币
+  AdventurerProfile spendGold(int amount) {
+    if (gold < amount) {
+      throw Exception('金币不足！当前金币：$gold，需要：$amount');
+    }
+    return copyWith(
+      gold: gold - amount,
+      totalGoldSpent: totalGoldSpent + amount,
+    );
+  }
+
+  // v1.1.0 新增：检查是否有足够金币
+  bool canAfford(int amount) => gold >= amount;
+
   // 解锁成就
   AdventurerProfile unlockAchievement(String achievement) {
     if (achievements.contains(achievement)) return this;
@@ -111,6 +146,9 @@ class AdventurerProfile extends HiveObject {
     int? totalGold,
     List<String>? achievements,
     int? consecutiveWorkDays,
+    int? gold,
+    int? totalGoldEarned,
+    int? totalGoldSpent,
   }) {
     return AdventurerProfile(
       name: name ?? this.name,
@@ -120,6 +158,9 @@ class AdventurerProfile extends HiveObject {
       totalGold: totalGold ?? this.totalGold,
       achievements: achievements ?? this.achievements,
       consecutiveWorkDays: consecutiveWorkDays ?? this.consecutiveWorkDays,
+      gold: gold ?? this.gold,
+      totalGoldEarned: totalGoldEarned ?? this.totalGoldEarned,
+      totalGoldSpent: totalGoldSpent ?? this.totalGoldSpent,
     );
   }
 }

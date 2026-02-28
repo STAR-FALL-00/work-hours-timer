@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.2.0+1
 
 environment:
   sdk: ^3.5.4
@@ -57,6 +57,25 @@ dependencies:
   
   # Charts
   fl_chart: ^0.66.0
+  
+  # v1.1.0 新增依赖
+  window_manager: ^0.3.7        # 窗口管理（悬浮窗）
+  audioplayers: ^5.2.1          # 音效播放
+  flutter_heatmap_calendar: ^1.0.5  # 热力图
+  uuid: ^4.2.1                  # UUID 生成
+  
+  # v1.2.0 UI 重构依赖
+  google_fonts: ^6.1.0          # 字体
+  flutter_animate: ^4.5.0       # 动效
+  percent_indicator: ^4.2.3     # 进度条
+  animations: ^2.0.11           # 页面转场
+  
+  # v3.0 多窗口架构依赖
+  desktop_multi_window: ^0.2.0  # 多窗口管理
+  flutter_acrylic: ^1.1.4       # 窗口特效（毛玻璃）
+  win32: ^5.0.0                 # Windows API
+  synchronized: ^3.1.0          # 并发控制
+  ffi: ^2.1.0                   # FFI 支持
 
 dev_dependencies:
   flutter_test:
@@ -86,9 +105,17 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/audio/
+  
+  # v1.1.0 音效资源
+  # 需要添加以下音效文件到 assets/audio/ 目录：
+  # - start_work.mp3      (开始工作音效)
+  # - level_up.mp3        (升级音效)
+  # - project_complete.mp3 (项目完成音效)
+  # - achievement.mp3     (成就解锁音效)
+  # - purchase.mp3        (购买商品音效)
+  # - error.mp3           (错误提示音效)
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

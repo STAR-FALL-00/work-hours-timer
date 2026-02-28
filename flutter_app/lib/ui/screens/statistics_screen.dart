@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../providers/providers.dart';
+import '../widgets/work_heatmap.dart';
 
 class StatisticsScreen extends ConsumerStatefulWidget {
   const StatisticsScreen({super.key});
@@ -17,7 +18,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -29,7 +30,99 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen>
   String _formatDuration(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
-    return '${hours}小时${minutes}分钟';
+    return '$hours小时$minutes分钟';
+  }
+
+  Widget _buildHeatmapView() {
+    return ref.watch(heatmapDataProvider).when(
+          data: (heatmapData) => SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 统计卡片
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildSummaryCard(
+                        '过去一年',
+                        heatmapData.values.fold<Duration>(
+                          Duration.zero,
+                          (sum, duration) => sum + duration,
+                        ),
+                        Icons.calendar_today_rounded,
+                        Colors.green,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildSummaryCard(
+                        '工作天数',
+                        Duration(hours: heatmapData.length),
+                        Icons.event_available_rounded,
+                        Colors.blue,
+                        suffix: '天',
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // 热力图
+                WorkHeatmap(workData: heatmapData),
+
+                const SizedBox(height: 16),
+
+                // 说明卡片
+                Card(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline_rounded,
+                              color: Colors.blue[700],
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '使用说明',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.blue[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          '• 点击任意日期查看当天的详细工作时长\n'
+                          '• 颜色越深表示当天工作时间越长\n'
+                          '• 灰色表示当天没有工作记录',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[700],
+                            height: 1.6,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(child: Text('错误: $error')),
+        );
   }
 
   @override
@@ -50,6 +143,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen>
           unselectedLabelStyle:
               const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
           tabs: const [
+            Tab(text: '热力图'),
             Tab(text: '本周'),
             Tab(text: '本月'),
             Tab(text: '本年'),
@@ -59,6 +153,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
+          _buildHeatmapView(),
           _buildWeeklyStats(),
           _buildMonthlyStats(),
           _buildYearlyStats(),
